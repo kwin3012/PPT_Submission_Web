@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+</head>
+<body>
+
+    <div class="container">
+
+    <h4>List of the students who selected the topic {{ topic_name}}</h4>
+    {% if add %}
+    <a class="btn btn-success" href="/{{id}}/add_student">ADD STUDENT</a>
+    {% endif %}
+
+    <br>
+    <br>
+
+    <ol>
+
+    {% for student in students %}
+
+    <li>
+    <ul>
+         
+    <li><strong>Name: </strong>{{student.name}}</li>
+    <li><strong>Roll: </strong>{{student.roll}}</li>
+    <li><strong>Email: </strong>{{student.email}}</li>
+    
+
+    {% if student.ppt_submitted %}
+        <li><strong>File: </strong><a href="/{{student.roll}}/download">download</a></li>
+        {% else %}
+        <li><strong>File: </strong><a href="/{{id}}/add_file">UPLOAD FILE</a></li>
+        
+    {% endif %}
+
+
+    </ul>
+    </li>
+    <br>
+    <br>
+
+        
+    
+        
+    {% endfor %}
+
+    </ol>
+
+
+    </div>
+
+    
+</body>
+</html>

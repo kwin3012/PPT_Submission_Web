@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Topics</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+<body>
+
+    <div class="container">
+            <h1>CH419 PPT SUBMISSION</h1>
+            <h4>Select a Topic from below OR add a new one for your PPT Presentation.</h4>
+            <p><strong>Note*:</strong><br>After adding a new topic, register your name under that topic.<br>
+                Each topic will allow only 3 students to register in that.<br>
+                once you have register your name under the topic you will have an option to upload your PPT.</p>
+        
+        <a class="btn btn-success btn-lg" href="{% url 'add_topic' %}">ADD TOPIC</a>
+        <br>
+        <br>
+
+        <ol>
+        {% for topic in topics %}
+        <li><a  href="/{{topic.id}}"><strong>{{topic.topic_name}}</strong></a></li>
+        <br>
+        {% endfor %}
+    </ol>
+    
+    </div>
+
+    
+    
+</body>
+</html>

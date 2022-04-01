@@ -18,48 +18,51 @@ def add_topic(request):
     if request.method == 'POST':
         form = Topic_Form(request.POST)
         if form.is_valid():
-            post = form.save(commit=False)
-            post.save()
-            return redirect('topic')
+            topic = form.cleaned_data['topic_name']
+            topic = topic.lower()
+            if Topic.objects.all().filter(topic_name=topic):
+                messages.info(request,'Topic already taken!')
+            else:
+                t = Topic(topic_name = topic)
+                t.save()
+                messages.info(request,'Topic '+topic+' is added.')
+                return redirect('topic')
+                
         else:
-            messages.error(request,'form detail invalid!')
-    else:
-        form = Topic_Form()
-        context = {
-            'form':form,
-        }
+            messages.error(request,'Something went wrong!')
+    form = Topic_Form()
+    context = {
+        'form':form,
+    }
     return render(request, 'add_topic.html', context)
 
 def Index(request,id):
-    students = Student.objects.all().filter(t=id)
+    students = Student.objects.all().filter(topic = id)
     topic = Topic.objects.get(id=id)
-    add=True
-    n=len(students)
-    if n>=3:
-        add=False
+    add_student = True
+    no_of_students = len(students)
+    if no_of_students>=3:
+        add_student = False
 
-    for i in range(n):
-        if File.objects.filter(roll_check=students[i].roll):
-            students[i].ppt_submitted = True
-
-    return render(request,"students.html",{"id":id,"students":students,"add":add,"topic_name":topic.topic_name})
+    return render(request,"students.html",{"id":id,"students":students,"add":add_student,"topic_name":topic.topic_name})
 
 def add_student(request,id):
     if request.method == 'POST':
         form = Student_Form(request.POST)
         if form.is_valid():
             topic = Topic.objects.get(id=id)
+            name=form.cleaned_data["name"]
             roll = form.cleaned_data["roll"]
+            email = form.cleaned_data["email"]
             if Student.objects.all().filter(roll=roll):
-                messages.error(request,"you are already register or have typed wrong roll number")
+                messages.error(request,"you are already selected a topic or have typed wrong roll number")
             else:
-                student = Student(t=topic,name=form.cleaned_data["name"],roll=form.cleaned_data["roll"],email=form.cleaned_data["email"])
+                student = Student(topic=topic,name=name,roll=roll,email=email)
                 student.save()
                 return redirect("index",id)
         else:
-            messages.error(request, 'student detail invalid!')
+            messages.error(request, 'something went wrong!')
 
-    
     form = Student_Form()
     context = {'form':form,}
     return render(request, 'add_student.html', context)
@@ -68,20 +71,20 @@ def add_file(request,id):
     if request.method == 'POST':
         form = File_Form(request.POST, request.FILES)
         if form.is_valid():
-            rolls = form.cleaned_data["roll_check"]
-            if Student.objects.all().filter(roll=rolls):
-                print("heelo1")
-                if Student.objects.get(roll=rolls).ppt_submitted == False:
-                    print("help2")
-                    print(rolls)
-                    print(Student.objects.get(roll=rolls).ppt_submitted)
+            roll = form.cleaned_data["roll_check"]
+            if Student.objects.all().filter(roll=roll):
+                if Student.objects.get(roll=roll).ppt_submitted == False:
                     if request.FILES['file']:
                         file = request.FILES['file']
                         fs = FileSystemStorage() #defaults to  MEDIA_ROOT  
                         filename = fs.save(file.name, file)
                         file_url = fs.url(filename)
-                        student = Student.objects.get(roll=rolls)
-                        f = File(tt=student,roll_check=rolls,file=filename)
+                        student = Student.objects.get(roll=roll)
+                        print(student.ppt_submitted)
+                        student.ppt_submitted = True
+                        student.save()
+                        print(student.ppt_submitted)
+                        f = File(student=student,roll_check=roll,file=filename)
                         f.save()
                         return redirect("index",id)
                     else:
@@ -91,7 +94,7 @@ def add_file(request,id):
             else:
                 messages.error(request,'tying wrong roll number!')
         else:
-            messages.error(request,'file detail invalid!')
+            messages.error(request,'Something went wrong!')
         
     form = File_Form()
     context = {'form':form,}

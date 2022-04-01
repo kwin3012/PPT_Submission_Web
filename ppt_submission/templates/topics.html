@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,11 +12,20 @@
 <body>
 
     <div class="container">
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
             <h1>CH419 PPT SUBMISSION</h1>
             <h4>Select a Topic from below OR add a new one for your PPT Presentation.</h4>
             <p><strong>Note*:</strong><br>After adding a new topic, register your name under that topic.<br>
                 Each topic will allow only 3 students to register in that.<br>
-                once you have register your name under the topic you will have an option to upload your PPT.</p>
+                once you have register your name under the topic you will have an option to upload your PPT.<br>
+                Also, check that the topic is not selected.
+            </p>
         
         <a class="btn btn-success btn-lg" href="{% url 'add_topic' %}">ADD TOPIC</a>
         <br>

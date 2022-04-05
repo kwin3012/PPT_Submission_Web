@@ -65,7 +65,7 @@
             console.log(array.length);
             if(array.length > 0){
                 for(var i=0;i<array.length;i++){
-                    box.innerHTML += `<li><a  href="/{{topic.id}}"><strong>${array[i]['topic_name']}</strong></a></li><br>`;
+                    box.innerHTML += `<li><a  href="/${array[i]['id']}"><strong>${array[i]['topic_name']}</strong></a></li><br>`;
                 }
             }
             else

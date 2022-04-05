@@ -31,16 +31,49 @@
         <br>
         <br>
 
+        <input id="search_here" class="form-control mb-3" placeholder="type here to search...">
+
         <ol>
-        {% for topic in topics %}
-        <li><a  href="/{{topic.id}}"><strong>{{topic.topic_name}}</strong></a></li>
-        <br>
-        {% endfor %}
-    </ol>
+        <div id="box">
+            {% for topic in topics %}
+            <li><a  href="/{{topic.id}}"><strong>{{topic.topic_name}}</strong></a></li>
+            <br>
+            {% endfor %}
+        </div>
+        </ol>
     
     </div>
 
-    
-    
+
+    <script>
+        const data = '{{ topics_json }}'
+        const rdata = JSON.parse(data.replace(/&quot;/g,'"'))
+        const input = document.getElementById('search_here')
+
+        input.addEventListener('keyup',(event)=>{
+
+            let array = []
+            box.innerHTML = ""
+            console.log(event)
+            for(var i=0;i<rdata.length;i++){
+                var obj = rdata[i];
+                
+                if(obj['topic_name'].includes(event.target.value.toLowerCase())){
+                    array.push(obj);
+                }
+            }
+            console.log(array.length);
+            if(array.length > 0){
+                for(var i=0;i<array.length;i++){
+                    box.innerHTML += `<li><a  href="/{{topic.id}}"><strong>${array[i]['topic_name']}</strong></a></li><br>`;
+                }
+            }
+            else
+            {
+                box.innerHTML = `<li><strong>No Results Found!</strong></li><br>`;
+            }
+        })
+
+    </script>
 </body>
 </html>

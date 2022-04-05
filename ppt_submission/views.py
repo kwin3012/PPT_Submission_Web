@@ -7,12 +7,13 @@ from .models import *
 from django.core.files.storage import FileSystemStorage
 from django.http import FileResponse
 from django.contrib import messages
-
+import json
 # Create your views here.
 
 def Topics(request):
     topics = Topic.objects.all()
-    return render(request,"topics.html",{"topics":topics})
+    topics_json = json.dumps(list(Topic.objects.values()))
+    return render(request,"topics.html",{"topics":topics,"topics_json":topics_json})
 
 def add_topic(request):
     if request.method == 'POST':
